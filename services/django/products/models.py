@@ -108,6 +108,7 @@ def brand_post_save(sender, instance, **kwargs):
         }
     }
 
+    product_post_save()
     print(send_to_pubsub(aggregate))
 
 
