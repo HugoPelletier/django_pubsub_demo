@@ -14,6 +14,7 @@ services:
     depends_on:
       - pubsub
       - pubsub-streaming
+      - product-service-consumer
     command: python manage.py runserver 0.0.0.0:8000
 
   pubsub:
@@ -74,6 +75,7 @@ services:
       - ./services/product-service:/code
     depends_on:
       - aws-localstack
+      - pubsub
       - redis
     command: >
       sh -c "echo 'Starting service consumer' &&
