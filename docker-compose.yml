@@ -1,0 +1,89 @@
+version: "3.4"
+
+services:
+
+  ################# Services #################
+  django:
+    container_name: demo-django
+    build:
+      context: ./services/django
+    ports:
+      - 8000:8000
+    volumes:
+      - ./services/django:/code
+    depends_on:
+      - pubsub
+      - pubsub-streaming
+    command: python manage.py runserver 0.0.0.0:8000
+
+  pubsub:
+    container_name: demo-pubsub
+    build:
+      context: ./services/pubsub
+    ports:
+      - 5033:8080
+    volumes:
+      - ./services/pubsub:/code
+    env_file:
+      - env/pubsub.env
+    depends_on:
+      - aws-localstack
+    command: >
+      sh -c "echo 'Loading AWS LocalStack...' &&
+             sleep 20 &&
+             python installation/internal_bucket.py &&
+             python installation/internal_topic.py &&
+             python installation/internal_queues.py &&
+             python installation/internal_subscriptions.py &&
+             gunicorn app:api -b 0.0.0.0:8080 --workers=1 --reload"
+
+  pubsub-streaming:
+    container_name: demo-pubsub-streaming
+    build:
+      context: ./services/pubsub
+    volumes:
+      - ./services/pubsub:/code
+    env_file:
+      - env/pubsub.env
+    depends_on:
+      - aws-localstack
+    command: >
+      sh -c "echo 'Starting streaming consumer' &&
+             echo 'Loading AWS LocalStack...' &&
+             sleep 20 &&
+             python consumer.py --consumer=streaming &&
+             tail -f /dev/null"
+
+  aws-localstack:
+    container_name: demo-aws-localstack
+    image: localstack/localstack:latest
+    ports:
+      - 3572:4572 # S3
+      - 3575:4575 # SNS
+      - 3576:4576 # SQS
+    volumes:
+      - ./storage/aws-localstack/startup/:/docker-entrypoint-initaws.d/
+    env_file:
+      - ./env/aws_localstack.env
+
+  product-service-consumer:
+    container_name: demo-service-consumer
+    build:
+      context: ./services/product-service
+    volumes:
+      - ./services/product-service:/code
+    depends_on:
+      - aws-localstack
+      - redis
+    command: >
+      sh -c "echo 'Starting service consumer' &&
+             echo 'Loading AWS LocalStack...' &&
+             sleep 20 &&
+             python consumer.py &&
+             tail -f /dev/null"
+
+  redis:
+    container_name: demo-redis
+    image: redis:5.0
+    ports:
+      - 6397:6379
