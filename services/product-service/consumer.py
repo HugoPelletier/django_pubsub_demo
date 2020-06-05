@@ -1,12 +1,8 @@
 """
-Generic consumer
+Consumer example
 
-Based on the argument, this script will trigger the queue consumer.
-There are 3 different consumers in the ms-pubsub structure:
-
-1. publishing: has the responsibility to propagate the incoming messages to SNS
-2. streaming: has the responsibility to send a copy of the incoming messages to the data-lake through Firehose
-3. batch: has the responsibility to process batch requests.
+Pull messages front the queue and update the Redis key.
+In the context of the PoC, the consumer only update the Product.Brand information.
 
 @type: worker
 """
