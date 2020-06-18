@@ -60,8 +60,8 @@ The application will start automatically at with the `docker-compose up django`.
 
 ## Pubsub
 
-The application will start automatically at with the `docker-compose up django`.  
-The consumer (`demo-pubsub-streaming`) will also be active.
+The application will start automatically at with the `docker-compose up pubsub`.  
+The consumer (`demo-pubsub-streaming`) will also be available.
 
 ## Consumer
 
