@@ -46,7 +46,6 @@ class LoggerUtils:
 
     @classmethod
     def error(cls, msg: Union[str, Dict], *args: List, **kwargs: Dict) -> None:
-        print('error...')
         LoggerUtils.instance.std_err.error(cls.format_input(msg), *args, **kwargs)
 
     @classmethod

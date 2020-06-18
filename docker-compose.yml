@@ -38,6 +38,7 @@ services:
              python installation/internal_subscriptions.py &&
              gunicorn app:api -b 0.0.0.0:8080 --workers=1 --reload"
 
+
   pubsub-streaming:
     container_name: demo-pubsub-streaming
     build:
@@ -54,6 +55,7 @@ services:
              sleep 20 &&
              python consumer.py --consumer=streaming &&
              tail -f /dev/null"
+
 
   aws-localstack:
     container_name: demo-aws-localstack
@@ -81,6 +83,24 @@ services:
       sh -c "echo 'Starting service consumer' &&
              echo 'Loading AWS LocalStack...' &&
              sleep 20 &&
+             python consumer.py &&
+             tail -f /dev/null"
+
+
+  boutique-service-consumer:
+    container_name: demo-boutique-consumer
+    build:
+      context: ./services/boutique-consumer
+    volumes:
+      - ./services/boutique-consumer:/code
+    depends_on:
+      - aws-localstack
+      - pubsub
+    command: >
+      sh -c "echo 'Starting boutique consumer' &&
+             echo 'Loading AWS LocalStack...' &&
+             sleep 20 &&
+             echo 'Ready to receive messages....' &&
              python consumer.py &&
              tail -f /dev/null"
 

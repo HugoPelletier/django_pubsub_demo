@@ -21,3 +21,4 @@ QueueService().create(AWS_SQS_STORAGE)
 # This is just to create queue in a fast way.
 # This should be done with Terraform
 QueueService().create('service-consumer-queue')
+QueueService().create('boutique-consumer-queue')

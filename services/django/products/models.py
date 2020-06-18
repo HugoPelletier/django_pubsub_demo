@@ -100,7 +100,7 @@ def brand_post_save(sender, instance, **kwargs):
             'publication': int(time.time() * 1000)
         },
         'aggregate': {
-            'state': 'active',
+            'brand': 'active',
             'version': int(time.time() * 1000),
             'id': instance.id,
             'name': instance.name,

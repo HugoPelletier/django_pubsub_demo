@@ -32,3 +32,4 @@ LoggerUtils.info('\x1b[33mSubscriptions {} - {} and {} completed'.format(SnsProt
 TopicService().subscriptions(SnsProtocol.SQS.value, 'service-consumer-queue', 'Products.Brand')
 TopicService().subscriptions(SnsProtocol.SQS.value, 'service-consumer-queue', 'Products.Category')
 TopicService().subscriptions(SnsProtocol.SQS.value, 'service-consumer-queue', 'Products.Product')
+TopicService().subscriptions(SnsProtocol.SQS.value, 'boutique-consumer-queue', 'Storemanager.Boutique')
