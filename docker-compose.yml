@@ -96,6 +96,7 @@ services:
     depends_on:
       - aws-localstack
       - pubsub
+      - redis
     command: >
       sh -c "echo 'Starting boutique consumer' &&
              echo 'Loading AWS LocalStack...' &&
